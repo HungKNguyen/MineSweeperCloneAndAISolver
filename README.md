@@ -1,11 +1,16 @@
 # MineSweeperClone
 This is a simple clone of the Microsoft game, Minesweeper. This project was created using the library pygame for Python. The project also intergrated a simple AI that will solve the game. Since Minesweeper doesn't guarantee a solved game, the AI might fail due to random change (in my experience, the AI will solve the game reliably for a game with 16x30 grid and 70 bombs).
 ## How to use
-Command line: Move to the project directory then run the main.py file
+Install pygame:
+```
+% pip3 install pygame
+```
+Command line: Move to the project directory then run the main.py file.
 ```
 % python3 main.py
 ```
-By default this will create a game with 16x16 grid and 40 bombs
+By default this will create a game with 16x16 grid and 40 bombs.
+You can also run this in an IDE.
 ## Addtional Setting
 You can put an addtional argument to indicate preset difficulties:
 ```
