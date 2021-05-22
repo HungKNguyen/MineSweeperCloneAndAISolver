@@ -11,13 +11,13 @@ def isValid(proposed_sol, user_grid):
         for col in range(width):
             if user_grid[row][col] in ["F", "H"]:
                 continue
-            if str(surrounding_count(proposed_sol, (row, col), 1)) != user_grid[row][col]:
+            if surrounding_count(proposed_sol, (row, col), 1) != int(user_grid[row][col]):
                 return False
     return True
 
 
-def surrounding_count(grid, index, key):
-    count = 0
+def surrounding_set(grid, index):
+    surrounding = set()
     upper = max([0, index[0] - 1])
     lower = min([len(grid) - 1, index[0] + 1])
     left = max([0, index[1] - 1])
@@ -26,12 +26,23 @@ def surrounding_count(grid, index, key):
         for col in range(left, right + 1):
             if row == index[0] and col == index[1]:
                 continue
-            if grid[row][col] == key:
-                count += 1
+            surrounding.add((row, col))
+    return surrounding
+
+
+def set_count(grid, set, key):
+    count = 0
+    for index in set:
+        if grid[index[0]][index[1]] == key:
+            count += 1
     return count
 
 
-# Require more complex solutions to solve more difficult mode
+def surrounding_count(grid, index, key):
+    neighbor_set = surrounding_set(grid, index)
+    return set_count(grid, neighbor_set, key)
+
+
 def deduct(user_grid, mines_left, first_click):
     # Queue to return
     action_queue = set()
@@ -72,6 +83,7 @@ def deduct(user_grid, mines_left, first_click):
         # print("Clean up")
         return action_queue
 
+    # One cell deduction
     for row in range(height):
         for col in range(width):
             if user_grid[row][col] in ["F", "H", "O"]:
@@ -79,31 +91,98 @@ def deduct(user_grid, mines_left, first_click):
             # If current number same as surrounding hidden cell plus surrounding flags, flag all surrounding
             if int(user_grid[row][col]) == surrounding_count(user_grid, (row, col), "H") + surrounding_count(
                     user_grid, (row, col), "F"):
-                upper = max(row - 1, 0)
-                lower = min(row + 1, height - 1)
-                left = max(col - 1, 0)
-                right = min(col + 1, width - 1)
-                for index_row in range(upper, lower + 1):
-                    for index_col in range(left, right + 1):
-                        if index_row == row and index_col == col:
-                            continue
-                        if user_grid[index_row][index_col] == "H":
-                            action = SolverAction((index_row, index_col), True)
-                            action_queue.add(action)
+                for index in surrounding_set(user_grid, (row, col)):
+                    if user_grid[index[0]][index[1]] == "H":
+                        action = SolverAction(index, True)
+                        action_queue.add(action)
                 continue
             # If current number is the same number as surrounding flags, click the hidden one
             if int(user_grid[row][col]) == surrounding_count(user_grid, (row, col), "F"):
-                upper = max(row - 1, 0)
-                lower = min(row + 1, height - 1)
-                left = max(col - 1, 0)
-                right = min(col + 1, width - 1)
-                for index_row in range(upper, lower + 1):
-                    for index_col in range(left, right + 1):
-                        if index_row == row and index_col == col:
-                            continue
-                        if user_grid[index_row][index_col] == "H":
-                            action = SolverAction((index_row, index_col), False)
+                for index in surrounding_set(user_grid, (row, col)):
+                    if user_grid[index[0]][index[1]] == "H":
+                        action = SolverAction(index, False)
+                        action_queue.add(action)
+
+    # Two cells deduction
+    # Code intentionally written longer for ease of reading
+    for row in range(height):
+        for col in range(width):
+            if user_grid[row][col] in ["F", "H", "0"]:
+                continue
+            left_index = (row, col)
+            left_set = surrounding_set(user_grid, left_index)
+            left_number = int(user_grid[left_index[0]][left_index[1]])
+            pairing_cells = [(row, col + 1), (row + 1, col), (row + 1, col + 1)]
+            pairing_cells = [index for index in pairing_cells if index in left_set]
+            for right_index in pairing_cells:
+                if user_grid[right_index[0]][right_index[1]] in ["F", "H", "0"]:
+                    continue
+                right_set = surrounding_set(user_grid, right_index)
+                right_number = int(user_grid[right_index[0]][right_index[1]])
+                intersection_set = left_set.intersection(right_set)
+                left_diff_set = left_set - right_set
+                right_diff_set = right_set - left_set
+                intersection_at_most = min([left_number, right_number])
+                left_diff_at_least = left_number - intersection_at_most
+                left_diff_at_most = set_count(user_grid, left_diff_set, "H") + set_count(user_grid, left_diff_set, "F")
+                right_diff_at_least = right_number - intersection_at_most
+                right_diff_at_most = set_count(user_grid, right_diff_set, "H") +\
+                                     set_count(user_grid, right_diff_set,"F")
+
+                # Left version
+                if left_diff_at_most == left_diff_at_least:
+                    left_diff_actual = left_diff_at_most
+                    for index in left_diff_set:
+                        if user_grid[index[0]][index[1]] == "H":
+                            action = SolverAction(index, True)
                             action_queue.add(action)
+                    intersection_actual = left_number - left_diff_actual
+                    if intersection_actual == set_count(user_grid, intersection_set, "H") +\
+                            set_count(user_grid, intersection_set, "F"):
+                        for index in intersection_set:
+                            if user_grid[index[0]][index[1]] == "H":
+                                action = SolverAction(index, True)
+                                action_queue.add(action)
+                    right_diff_actual = right_number - intersection_actual
+                    if right_diff_actual == set_count(user_grid, right_diff_set, "H") +\
+                            set_count(user_grid, right_diff_set, "F"):
+                        for index in right_diff_set:
+                            if user_grid[index[0]][index[1]] == "H":
+                                action = SolverAction(index, True)
+                                action_queue.add(action)
+                    if right_diff_actual == set_count(user_grid, right_diff_set, "F"):
+                        for index in right_diff_set:
+                            if user_grid[index[0]][index[1]] == "H":
+                                action = SolverAction(index, False)
+                                action_queue.add(action)
+
+                # Right version
+                if right_diff_at_most == right_diff_at_least:
+                    right_diff_actual = right_diff_at_most
+                    for index in right_diff_set:
+                        if user_grid[index[0]][index[1]] == "H":
+                            action = SolverAction(index, True)
+                            action_queue.add(action)
+                    intersection_actual = right_number - right_diff_actual
+                    if intersection_actual == set_count(user_grid, intersection_set, "H") +\
+                            set_count(user_grid, intersection_set, "F"):
+                        for index in intersection_set:
+                            if user_grid[index[0]][index[1]] == "H":
+                                action = SolverAction(index, True)
+                                action_queue.add(action)
+                    left_diff_actual = left_number - intersection_actual
+                    if left_diff_actual == set_count(user_grid, left_diff_set, "H") +\
+                            set_count(user_grid, left_diff_set, "F"):
+                        for index in left_diff_set:
+                            if user_grid[index[0]][index[1]] == "H":
+                                action = SolverAction(index, True)
+                                action_queue.add(action)
+                    if left_diff_actual == set_count(user_grid, left_diff_set, "F"):
+                        for index in left_diff_set:
+                            if user_grid[index[0]][index[1]] == "H":
+                                action = SolverAction(index, False)
+                                action_queue.add(action)
+
     if len(action_queue) > 0:
         # print("Deduction")
         return action_queue
