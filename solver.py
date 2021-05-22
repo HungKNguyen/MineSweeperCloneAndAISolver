@@ -95,7 +95,6 @@ def deduct(user_grid, mines_left, first_click):
                     if user_grid[index[0]][index[1]] == "H":
                         action = SolverAction(index, True)
                         action_queue.add(action)
-                continue
             # If current number is the same number as surrounding flags, click the hidden one
             if int(user_grid[row][col]) == surrounding_count(user_grid, (row, col), "F"):
                 for index in surrounding_set(user_grid, (row, col)):
