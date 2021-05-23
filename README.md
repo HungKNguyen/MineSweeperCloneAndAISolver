@@ -1,5 +1,5 @@
 # MineSweeperClone
-This is a simple clone of the Microsoft game, Minesweeper. This project was created using the library pygame for Python. The project also integrated a simple AI that will solve the game. Since Minesweeper doesn't guarantee a solved game, the AI might fail due to random change (in my experience, the AI will solve the game reliably for a game with 16x30 grid and 70 bombs).
+This is a simple clone of the Microsoft game, Minesweeper. This project was created using the library pygame for Python. The project also integrated a simple AI that will solve the game. Since Minesweeper doesn't guarantee a solved game, the AI might fail due to random change (in my experience, the AI will solve the game reliably for a game with below 20% mine density).
 ## How to use
 Install pygame:
 ```

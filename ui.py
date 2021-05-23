@@ -13,10 +13,10 @@ class UI:
         # Size is width x height
         self.piece_size = piece_size
         self.board_size = self.piece_size[0] * self.board.size[1], self.piece_size[1] * self.board.size[0]
-        self.digit_size = self.piece_size[0] // 16 * 13, self.piece_size[1] // 16 * 23
-        self.face_size = self.piece_size[0] // 16 * 24, self.piece_size[1] // 16 * 24
-        self.control_height = self.piece_size[0] // 16 * 43
-        self.margin = self.piece_size[0] // 16 * 10
+        self.digit_size = int(self.piece_size[0] / 16 * 13), int(self.piece_size[1] / 16 * 23)
+        self.face_size = int(self.piece_size[0] / 16 * 24), int(self.piece_size[1] / 16 * 24)
+        self.control_height = int(self.piece_size[0] / 16 * 43)
+        self.margin = int(self.piece_size[0] / 16 * 10)
         self.screen_size = self.board_size[0], self.board_size[1] + self.control_height
         self.screen = None
         self.load_images()
@@ -47,10 +47,10 @@ class UI:
                     self.board_size = new_w, new_h
                     self.piece_size = self.board_size[0] // self.board.size[1], \
                                       self.board_size[1] // self.board.size[0]
-                    self.digit_size = self.piece_size[0] // 16 * 13, self.piece_size[1] // 16 * 23
-                    self.face_size = self.piece_size[0] // 16 * 24, self.piece_size[1] // 16 * 24
-                    self.control_height = self.piece_size[0] // 16 * 43
-                    self.margin = self.piece_size[0] // 16 * 10
+                    self.digit_size = int(self.piece_size[0] / 16 * 13), int(self.piece_size[1] / 16 * 23)
+                    self.face_size = int(self.piece_size[0] / 16 * 24), int(self.piece_size[1] / 16 * 24)
+                    self.control_height = int(self.piece_size[0] / 16 * 43)
+                    self.margin = int(self.piece_size[0] / 16 * 10)
                     self.screen_size = self.board_size[0], \
                                        self.board_size[1] + self.control_height
                     self.screen = pygame.display.set_mode(self.screen_size, pygame.RESIZABLE)
