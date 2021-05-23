@@ -99,7 +99,7 @@ def deduce(user_grid, mines_left, first_click):
             left_index = (row, col)
             left_set = surrounding_set(user_grid, left_index)
             left_number = int(user_grid[left_index[0]][left_index[1]])
-            pairing_cells = [(row, col + 1), (row + 1, col), (row + 1, col + 1)]
+            pairing_cells = [(row, col + 1), (row + 1, col), (row + 1, col + 1), (row + 2, col), (row, col + 2)]
             pairing_cells = [index for index in pairing_cells if index in left_set]
             for right_index in pairing_cells:
                 if user_grid[right_index[0]][right_index[1]] in ["F", "H", "0"]:
@@ -109,7 +109,8 @@ def deduce(user_grid, mines_left, first_click):
                 intersection_set = left_set.intersection(right_set)
                 left_diff_set = left_set - right_set
                 right_diff_set = right_set - left_set
-                intersection_at_most = min([left_number, right_number])
+                intersection_at_most = min([left_number, right_number,
+                                            (set_count(user_grid, intersection_set, "H") + set_count(user_grid, intersection_set, "F"))])
                 left_diff_at_least = left_number - intersection_at_most
                 left_diff_at_most = set_count(user_grid, left_diff_set, "H") + set_count(user_grid, left_diff_set, "F")
                 right_diff_at_least = right_number - intersection_at_most
@@ -134,12 +135,12 @@ def deduce(user_grid, mines_left, first_click):
 
     # This part is the last resort, check threshold, if exceed, went for a random guess
     total_combinations = math.comb(len(possible_loc), mines_left)
-    if total_combinations > 100000:
+    if total_combinations > 10000:
         random_loc = rd.choice(list(possible_loc))
         action = SolverAction(divmod(random_loc, width), False)
         action_queue.add(action)
         # print("Random Guess")
-        return list(action_queue)
+        return action_queue
 
     # Create combination of all possible arrangement of mines
     # print(total_combinations)
@@ -163,7 +164,7 @@ def deduce(user_grid, mines_left, first_click):
         if pair[1] == 0:
             action = SolverAction(divmod(pair[0], width), False)
             action_queue.add(action)
-        elif pair[1] == valid_combination:
+        elif pair[1] == valid_combination and valid_combination > 0:
             action = SolverAction(divmod(pair[0], width), True)
             action_queue.add(action)
     # If queue is still empty, then click on the single best option
@@ -173,7 +174,7 @@ def deduce(user_grid, mines_left, first_click):
         action_queue.add(action)
     # Return queue
     # print("Probability")
-    return list(action_queue)
+    return action_queue
 
 
 def single_cell_deduction_helper(index, grid, relevant_set):

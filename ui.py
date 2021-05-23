@@ -78,7 +78,8 @@ class UI:
                         continue
                     self.handle_key_input(event.unicode)
                     continue
-            self.draw()
+            if not self.cheat_active:
+                self.draw()
             pygame.display.flip()
         pygame.quit()
 
@@ -215,7 +216,7 @@ class UI:
 
     def cheat_thread_func(self):
         self.cheat_window = True
-        time.sleep(2)
+        time.sleep(1.5)
         self.cheat_window = False
         self.cheat_input.clear()
 
@@ -227,11 +228,13 @@ class UI:
         while self.cheat_active and not (self.board.lost or self.board.won):
             current_view = self.board.give_board_view()
             actions = solver_func(current_view)
-            action = actions.pop()
-            # print(action)
-            piece = self.board.get_piece(action.index)
-            self.board.handle_click(piece, action.flag)
+            while len(actions) > 0:
+                action = actions.pop()
+                piece = self.board.get_piece(action.index)
+                self.board.handle_click(piece, action.flag)
+                self.draw()
             time.sleep(0.1)
+        self.cheat_active = False
 
     def solve_thread(self):
         thread = threading.Thread(target=self.solve_full_step)

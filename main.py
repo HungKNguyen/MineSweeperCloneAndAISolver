@@ -25,6 +25,9 @@ if __name__ == "__main__":
         else:
             print("Invalid input, default to Intermediate")
     piece_size = 25, 25
+    if board_size[0] > 32 or board_size[1] > 32:
+        new_piece_size = max([600 // board_size[0], 600 // board_size[1]])
+        piece_size = new_piece_size, new_piece_size
     board = Board(board_size, bombs)
     ui = UI(board, piece_size)
     ui.run()
