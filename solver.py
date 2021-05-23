@@ -162,7 +162,6 @@ def deduce(user_grid, mines_left, first_click):
             for index in combination:
                 mine_dict[index] += 1
     # Extract key with 0 and max, append in queue
-    print(mine_dict)
     for pair in mine_dict.items():
         if pair[1] == 0:
             action = SolverAction(divmod(pair[0], width), False)
