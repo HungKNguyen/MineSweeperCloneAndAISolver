@@ -23,7 +23,7 @@ You can also customise your own game:
 ```
 The command below create a game with 16x16 grid and 50 bombs.
 ## How to play:
-The rule is the same as the official Minesweeper. The first click will never result in a game over. You can left-click on an empty cell to uncover it, right-click to toggle flagging the cell. Click on the face to reset the game with a new board. There is also an AI mechanism which you can activate by typing "solve" and escape key to stop the AI. Typing "test" will print out the AI's view of the game.
+The rule is the same as the official Minesweeper. The first click will never result in a game over. You can left-click on an empty cell to uncover it, right-click to toggle flagging the cell. Click on the face to reset the game with a new board. There is also an AI mechanism which you can activate by typing "solve" and escape key to stop the AI. Typing "test" will print out the AI's view of the game. Typing "hint" will have the AI move one move for the player.
 ## AI
 The rule of the AI is very simple:
 * At the beginning of the game, the AI will simply pick a corner at random

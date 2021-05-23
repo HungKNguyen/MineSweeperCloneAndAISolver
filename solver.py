@@ -1,4 +1,5 @@
 import itertools as itt
+import copy
 import math
 import random as rd
 from solver_components import SolverAction
@@ -143,14 +144,15 @@ def deduce(user_grid, mines_left, first_click):
         return action_queue
 
     # Create combination of all possible arrangement of mines
-    # print(total_combinations)
     possible_combinations = list(itt.combinations(possible_loc, mines_left))
     valid_combination = 0
     # Create a dictionary to keep scoring of each mines
     mine_dict = {}
+    for index in possible_loc:
+        mine_dict[index] = 0
     for combination in possible_combinations:
         # Create proposed solution given the combination
-        proposed_grid = current_grid.copy()
+        proposed_grid = copy.deepcopy(current_grid)
         for index in combination:
             row_col = divmod(index, width)
             proposed_grid[row_col[0]][row_col[1]] = 1
@@ -158,8 +160,9 @@ def deduce(user_grid, mines_left, first_click):
         if isValid(proposed_grid, user_grid):
             valid_combination += 1
             for index in combination:
-                mine_dict[index] = mine_dict.get(index, 0) + 1
+                mine_dict[index] += 1
     # Extract key with 0 and max, append in queue
+    print(mine_dict)
     for pair in mine_dict.items():
         if pair[1] == 0:
             action = SolverAction(divmod(pair[0], width), False)

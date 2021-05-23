@@ -41,9 +41,9 @@ class UI:
                     running = False
                     continue
                 if event.type == pygame.VIDEORESIZE:
-                    ratio = self.board_size[0] // self.board_size[1]
-                    new_h = (event.h // self.board.size[0]) * self.board.size[0]
-                    new_w = new_h * ratio
+                    ratio = self.board_size[0] / self.board_size[1]
+                    new_w = (event.w // self.board.size[1]) * self.board.size[1]
+                    new_h = int(new_w / ratio)
                     self.board_size = new_w, new_h
                     self.piece_size = self.board_size[0] // self.board.size[1], \
                                       self.board_size[1] // self.board.size[0]
@@ -210,9 +210,14 @@ class UI:
         if self.cheat_input == ["s", "o", "l", "v", "e"]:
             self.cheat_active = True
             self.solve_thread()
+        if self.cheat_input == ["h", "i", "n", "t"]:
+            current_view = self.board.give_board_view()
+            actions = solver_func(current_view)
+            action = actions.pop()
+            piece = self.board.get_piece(action.index)
+            self.board.handle_click(piece, action.flag)
         if self.cheat_input == ["t", "e", "s", "t"]:
             print(self.board.give_board_view())
-
 
     def cheat_thread_func(self):
         self.cheat_window = True
