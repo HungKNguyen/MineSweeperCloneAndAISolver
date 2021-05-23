@@ -1,5 +1,5 @@
 # MineSweeperClone
-This is a simple clone of the Microsoft game, Minesweeper. This project was created using the library pygame for Python. The project also intergrated a simple AI that will solve the game. Since Minesweeper doesn't guarantee a solved game, the AI might fail due to random change (in my experience, the AI will solve the game reliably for a game with 16x30 grid and 70 bombs).
+This is a simple clone of the Microsoft game, Minesweeper. This project was created using the library pygame for Python. The project also integrated a simple AI that will solve the game. Since Minesweeper doesn't guarantee a solved game, the AI might fail due to random change (in my experience, the AI will solve the game reliably for a game with 16x30 grid and 70 bombs).
 ## How to use
 Install pygame:
 ```
@@ -9,10 +9,10 @@ Command line: Move to the project directory then run the main.py file.
 ```
 % python3 main.py
 ```
-By default this will create a game with 16x16 grid and 40 bombs.
+By default, this will create a game with 16x16 grid and 40 bombs.
 You can also run this in an IDE.
-## Addtional Setting
-You can put an addtional argument to indicate preset difficulties:
+## Additional Setting
+You can put an additional argument to indicate preset difficulties:
 ```
 % python3 main.py beginner
 ```
@@ -23,7 +23,7 @@ You can also customise your own game:
 ```
 The command below create a game with 16x16 grid and 50 bombs.
 ## How to play:
-The rule is the same as the official Minesweeper. The first click will never result in a game over. You can left-click on an empty cell to uncover it, right-click to toggle flagging the cell. Click on the face to reset the game with a new board. There is also an AI mechanism which you can activate by typing "solve" and "q" to stop the AI.
+The rule is the same as the official Minesweeper. The first click will never result in a game over. You can left-click on an empty cell to uncover it, right-click to toggle flagging the cell. Click on the face to reset the game with a new board. There is also an AI mechanism which you can activate by typing "solve" and escape key to stop the AI. Typing "test" will print out the AI's view of the game.
 ## AI
 The rule of the AI is very simple:
 * At the beginning of the game, the AI will simply pick a corner at random

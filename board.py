@@ -70,7 +70,7 @@ class Board:
                 neighbors.append(self.get_piece((row, col)))
         return neighbors
 
-    # TODO: Update piece in reaction to click
+
     def handle_click(self, piece, flag):
         if self.lost or self.won:
             return

@@ -73,6 +73,9 @@ class UI:
                         self.handle_face_release()
                     continue
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.cheat_active = False
+                        continue
                     self.handle_key_input(event.unicode)
                     continue
             self.draw()
@@ -200,15 +203,15 @@ class UI:
         self.board.start()
 
     def handle_key_input(self, key):
-        if key == "q":
-            self.cheat_active = False
-            return
         if not self.cheat_window:
             self.cheat_enter_window_thread()
         self.cheat_input.append(key)
         if self.cheat_input == ["s", "o", "l", "v", "e"]:
             self.cheat_active = True
             self.solve_thread()
+        if self.cheat_input == ["t", "e", "s", "t"]:
+            print(self.board.give_board_view())
+
 
     def cheat_thread_func(self):
         self.cheat_window = True
